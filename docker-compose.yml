@@ -5,14 +5,12 @@ services:
     build: ./cbr
     image: cbr:v1
     depends_on:
-      nats:
-        condition: service_started
+      - nats
   nats-getter:
     build: ./get-from-nats
     image: nats-getter:v1
     depends_on:
-      nats:
-        condition: service_started
+      - nats
     ports:
       - 8080:8080
   nats:
