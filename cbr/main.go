@@ -4,7 +4,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
 
@@ -27,7 +26,7 @@ var sendCh = make(chan interface{})
 
 func main() {
 	nc, _ := nats.Connect("nats://nats:4222")
-	// nc, err := nats.Connect(nats.DefaultURL)
+	// nc, _ := nats.Connect(nats.DefaultURL)
 	ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	defer ec.Close()
 	ec.BindSendChan("cbr", sendCh)
@@ -37,7 +36,7 @@ func main() {
 
 		resp, err := http.Get("https://www.cbr.ru/scripts/XML_daily.asp")
 		if err != nil {
-			log.Fatalln(err)
+			continue
 		}
 
 		data := xml.NewDecoder(resp.Body)
@@ -53,7 +52,7 @@ func main() {
 		currencies := new(currenciesList)
 		err = data.Decode(&currencies)
 		if err != nil {
-			log.Fatalln(err)
+			continue
 		}
 
 		currenciesResult := make([]currency, 0)

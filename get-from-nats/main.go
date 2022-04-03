@@ -32,18 +32,18 @@ func recvNats() {
 	}
 	defer nc.Close()
 
-	count := 0
+	msgCount := 0
 	nc.Subscribe("cbr", func(msg *nats.Msg) {
-		count++
+		msgCount++
 		json.Unmarshal(msg.Data, &resultMap)
 		resultMapSlice = append(resultMapSlice, resultMap)
 		resultMap = make(map[string]interface{})
 	})
 
 	for {
-		old := count
-		time.Sleep(15 * time.Second)
-		if old == count {
+		old := msgCount
+		time.Sleep(30 * time.Second)
+		if old == msgCount {
 			break
 		}
 	}
